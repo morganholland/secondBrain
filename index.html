@@ -26,11 +26,25 @@
                 ></textarea>
                 
                 <div class="controls">
+                    <div class="mode-toggle">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="aiModeToggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="mode-label" id="modeLabel">Analysis Mode</span>
+                    </div>
+                    
                     <button id="analyzeBtn" onclick="analyzeText()">
-                        <span class="btn-text">Analyze Text</span>
-                        <span class="btn-icon">📊</span>
+                        <span class="btn-text" id="btnText">Analyze Text</span>
+                        <span class="btn-icon" id="btnIcon">📊</span>
                     </button>
                     <button id="clearBtn" onclick="clearText()">Clear</button>
+                </div>
+                
+                <div id="apiKeySection" class="api-key-section" style="display: none;">
+                    <label for="groqApiKey">Groq API Key:</label>
+                    <input type="password" id="groqApiKey" placeholder="Enter your Groq API key..." />
+                    <small>Your API key is stored locally and never sent to our servers</small>
                 </div>
                 
                 <div class="word-count">

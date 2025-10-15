@@ -414,14 +414,93 @@ class WritingBot {
 // Global variables and event handlers
 const bot = new WritingBot();
 
+// AI Enhancement functionality
+class AIEnhancer {
+    constructor() {
+        this.groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
+        this.model = 'mixtral-8x7b-32768';
+    }
+
+    async enhanceText(text, apiKey) {
+        const prompt = this.createWritingPrompt(text);
+        
+        try {
+            const response = await fetch(this.groqApiUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: this.model,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are an expert writing coach who applies proven principles from Wes Kao, June Casagrande, the Minto Pyramid Principle, HBR Guide to Better Business Writing, and William Zinsser to improve business and creative writing.'
+                        },
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 2000
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            return data.choices[0].message.content.trim();
+        } catch (error) {
+            console.error('AI Enhancement Error:', error);
+            throw new Error(`AI Enhancement failed: ${error.message}`);
+        }
+    }
+
+    createWritingPrompt(originalText) {
+        return `Please rewrite the following text applying these proven writing principles:
+
+PRINCIPLES TO APPLY:
+1. Super Specific "How" - Focus on actionable implementation rather than vague concepts
+2. Cut Backstory - Start right before you get eaten by the bear, eliminate unnecessary setup
+3. Clear Recommendations - Avoid communication surprises, state your position clearly
+4. Bottom Line Up Front - Lead with conclusions, then provide context (Minto Pyramid)
+5. Sentence Structure - Use clear, concise sentences with proper structure
+6. Active Voice - Prefer active voice over passive for clarity and directness
+7. Logical Flow - Structure arguments logically with clear hierarchy
+8. Conciseness - Eliminate unnecessary words and redundant phrases
+9. Clarity & Simplicity - Write clearly, avoid jargon and complex constructions
+10. Eliminate Clutter - Remove unnecessary qualifiers, weak words, and complexity
+
+ORIGINAL TEXT:
+${originalText}
+
+INSTRUCTIONS:
+- Rewrite the text to follow all these principles
+- Keep the core message and meaning intact
+- Make it more engaging and actionable
+- Ensure it flows logically and reads smoothly
+- Remove any backstory or setup that doesn't add value
+- Start with the main point or conclusion
+
+REWRITTEN TEXT:`;
+    }
+}
+
+const aiEnhancer = new AIEnhancer();
+
 function updateWordCount() {
     const text = document.getElementById('textInput').value;
     const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
     document.getElementById('wordCount').textContent = `${wordCount} words`;
 }
 
-function analyzeText() {
+async function analyzeText() {
     const text = document.getElementById('textInput').value.trim();
+    const isAiMode = document.getElementById('aiModeToggle').checked;
     
     if (!text) {
         alert('Please enter some text to analyze.');
@@ -429,32 +508,82 @@ function analyzeText() {
     }
 
     const analyzeBtn = document.getElementById('analyzeBtn');
-    const btnText = analyzeBtn.querySelector('.btn-text');
-    const btnIcon = analyzeBtn.querySelector('.btn-icon');
+    const btnText = document.getElementById('btnText');
+    const btnIcon = document.getElementById('btnIcon');
     
     // Show loading state
     analyzeBtn.disabled = true;
-    btnText.textContent = 'Analyzing...';
-    btnIcon.innerHTML = '<div class="loading"></div>';
-
-    // Simulate analysis delay for better UX
-    setTimeout(() => {
-        const results = bot.analyzeText(text);
-        displayResults(results);
+    
+    if (isAiMode) {
+        btnText.textContent = 'AI Enhancing...';
+        btnIcon.innerHTML = '<div class="loading"></div>';
         
-        // Reset button
-        analyzeBtn.disabled = false;
-        btnText.textContent = 'Analyze Text';
-        btnIcon.textContent = '📊';
-    }, 1000);
+        const apiKey = document.getElementById('groqApiKey').value.trim() || localStorage.getItem('groqApiKey');
+        if (!apiKey) {
+            alert('Please enter your Groq API key for AI enhancement.');
+            analyzeBtn.disabled = false;
+            btnText.textContent = 'AI Enhance Text';
+            btnIcon.textContent = '🤖';
+            return;
+        }
+        
+        try {
+            const enhancedText = await aiEnhancer.enhanceText(text, apiKey);
+            
+            // Replace the text in the textarea with the enhanced version
+            document.getElementById('textInput').value = enhancedText;
+            updateWordCount();
+            
+            // Now analyze the enhanced text
+            const results = bot.analyzeText(enhancedText);
+            displayResults(results, true); // true indicates this was AI enhanced
+            
+            // Show success message
+            setTimeout(() => {
+                alert('✅ Text enhanced with AI! Analysis shows the improved version.');
+            }, 500);
+            
+        } catch (error) {
+            alert(`AI Enhancement failed: ${error.message}`);
+            console.error('AI Enhancement Error:', error);
+        } finally {
+            analyzeBtn.disabled = false;
+            btnText.textContent = 'AI Enhance Text';
+            btnIcon.textContent = '🤖';
+        }
+    } else {
+        btnText.textContent = 'Analyzing...';
+        btnIcon.innerHTML = '<div class="loading"></div>';
+
+        // Simulate analysis delay for better UX
+        setTimeout(() => {
+            const results = bot.analyzeText(text);
+            displayResults(results);
+            
+            // Reset button
+            analyzeBtn.disabled = false;
+            btnText.textContent = 'Analyze Text';
+            btnIcon.textContent = '📊';
+        }, 1000);
+    }
 }
 
-function displayResults(results) {
+function displayResults(results, isAiEnhanced = false) {
     const resultsSection = document.getElementById('results');
     const analysisContent = document.getElementById('analysisContent');
     
     let html = '';
     let allPassed = true;
+    
+    // Add AI enhancement indicator if this was enhanced
+    if (isAiEnhanced) {
+        html += `
+            <div class="ai-enhanced-indicator">
+                <span class="ai-icon">🤖</span>
+                <span class="ai-text">AI Enhanced Text - Analysis of Improved Version</span>
+            </div>
+        `;
+    }
     
     // Display analysis for each rule
     for (const [ruleName, ruleAnalysis] of Object.entries(results.analysis)) {
@@ -515,9 +644,46 @@ function clearText() {
     document.getElementById('wordCount').textContent = '0 words';
 }
 
+function toggleAiMode() {
+    const isAiMode = document.getElementById('aiModeToggle').checked;
+    const apiKeySection = document.getElementById('apiKeySection');
+    const btnText = document.getElementById('btnText');
+    const btnIcon = document.getElementById('btnIcon');
+    const modeLabel = document.getElementById('modeLabel');
+    
+    if (isAiMode) {
+        apiKeySection.style.display = 'block';
+        btnText.textContent = 'AI Enhance Text';
+        btnIcon.textContent = '🤖';
+        modeLabel.textContent = 'AI Mode';
+        
+        // Try to load saved API key
+        const savedKey = localStorage.getItem('groqApiKey');
+        if (savedKey) {
+            document.getElementById('groqApiKey').value = savedKey;
+        }
+    } else {
+        apiKeySection.style.display = 'none';
+        btnText.textContent = 'Analyze Text';
+        btnIcon.textContent = '📊';
+        modeLabel.textContent = 'Analysis Mode';
+    }
+}
+
+function saveApiKey() {
+    const apiKey = document.getElementById('groqApiKey').value;
+    if (apiKey) {
+        localStorage.setItem('groqApiKey', apiKey);
+    } else {
+        localStorage.removeItem('groqApiKey');
+    }
+}
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', function() {
     const textInput = document.getElementById('textInput');
+    const aiToggle = document.getElementById('aiModeToggle');
+    const apiKeyInput = document.getElementById('groqApiKey');
     
     textInput.addEventListener('input', updateWordCount);
     
@@ -526,6 +692,12 @@ document.addEventListener('DOMContentLoaded', function() {
             analyzeText();
         }
     });
+    
+    // AI mode toggle
+    aiToggle.addEventListener('change', toggleAiMode);
+    
+    // Save API key when typing
+    apiKeyInput.addEventListener('input', saveApiKey);
     
     // Initial word count
     updateWordCount();
