@@ -4,14 +4,15 @@ description: Enhanced Writing Analysis Based on Classic Guides
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
 
-# Build settings
+# Build settings - disable Jekyll processing for static site
 markdown: kramdown
 highlighter: rouge
-theme: minima
 
 # Exclude files from processing
 exclude:
   - README.md
+  - README-frontend.md
+  - writing_bot.py
   - Gemfile
   - Gemfile.lock
   - node_modules
@@ -20,9 +21,3 @@ exclude:
 # Include files that would otherwise be ignored
 include:
   - _redirects
-
-# Collections
-collections:
-  posts:
-    output: true
-    permalink: /:categories/:year/:month/:day/:title/
