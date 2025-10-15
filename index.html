@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Bot - Enhanced Writing Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✍️ Writing Bot</h1>
+            <p class="subtitle">Enhanced Writing Analysis Based on Classic Guides</p>
+            <div class="sources">
+                <span>Wes Kao • Casagrande • Minto Pyramid • HBR Guide • Zinsser</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <h2>Analyze Your Writing</h2>
+                <textarea 
+                    id="textInput" 
+                    placeholder="Paste your text here to analyze it against proven writing principles..."
+                    rows="8"
+                ></textarea>
+                
+                <div class="controls">
+                    <button id="analyzeBtn" onclick="analyzeText()">
+                        <span class="btn-text">Analyze Text</span>
+                        <span class="btn-icon">📊</span>
+                    </button>
+                    <button id="clearBtn" onclick="clearText()">Clear</button>
+                </div>
+                
+                <div class="word-count">
+                    <span id="wordCount">0 words</span>
+                </div>
+            </div>
+
+            <div id="results" class="results-section" style="display: none;">
+                <h2>Analysis Results</h2>
+                <div id="analysisContent"></div>
+            </div>
+
+            <div class="info-section">
+                <h2>What We Analyze</h2>
+                <div class="principles-grid">
+                    <div class="principle-card">
+                        <h3>🎯 Super Specific How</h3>
+                        <p>Focus on actionable implementation rather than vague concepts</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>⚡ Cut Backstory</h3>
+                        <p>Start right before you get eaten by the bear</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>📋 Clear Recommendations</h3>
+                        <p>Be clear about your point of view, avoid surprises</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>🏗️ Bottom Line First</h3>
+                        <p>Lead with conclusions, then provide context (Minto Pyramid)</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>📝 Sentence Structure</h3>
+                        <p>Clear, concise sentences with proper structure (Casagrande)</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>🔊 Active Voice</h3>
+                        <p>Prefer active voice over passive for clarity</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>🔗 Logical Flow</h3>
+                        <p>Structure arguments logically with clear hierarchy</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>✂️ Conciseness</h3>
+                        <p>Eliminate unnecessary words and redundant phrases</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>💡 Clarity & Simplicity</h3>
+                        <p>Write clearly, avoid jargon (Zinsser)</p>
+                    </div>
+                    <div class="principle-card">
+                        <h3>🧹 Eliminate Clutter</h3>
+                        <p>Remove unnecessary qualifiers and complexity</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built based on insights from Wes Kao's interview and classic writing guides</p>
+            <div class="links">
+                <a href="https://github.com/yourusername/secondBrain" target="_blank">GitHub</a>
+                <span>•</span>
+                <a href="writing_bot.py">Python Source</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

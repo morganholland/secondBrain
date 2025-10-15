@@ -1,0 +1,28 @@
+# GitHub Pages configuration
+title: Writing Bot
+description: Enhanced Writing Analysis Based on Classic Guides
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+
+# Include files that would otherwise be ignored
+include:
+  - _redirects
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /:categories/:year/:month/:day/:title/
