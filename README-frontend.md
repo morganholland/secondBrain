@@ -1,6 +1,6 @@
-# Writing Bot Frontend
+# Briefly Frontend
 
-A simple web interface for the Writing Bot that analyzes text based on proven writing principles from multiple classic guides.
+A simple web interface for Briefly that analyzes text based on proven writing principles from multiple classic guides.
 
 ## Features
 
@@ -16,7 +16,7 @@ To deploy this frontend to GitHub Pages:
 1. **Push to GitHub**: 
    ```bash
    git add .
-   git commit -m "Add writing bot frontend"
+   git commit -m "Add Briefly frontend"
    git push origin main
    ```
 

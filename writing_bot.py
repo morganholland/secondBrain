@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Writing Bot based on Wes Kao's writing principles and classic writing guides.
+Briefly - Writing analysis tool based on Wes Kao's writing principles and classic writing guides.
 
-This bot applies key writing rules from:
+This tool applies key writing rules from:
 - Wes Kao's principles from Lenny's Podcast
 - "It Was the Best of Sentences, It Was the Worst of Sentences" by June Casagrande
 - "The Minto Pyramid Principle" by Barbara Minto
@@ -29,7 +29,7 @@ import argparse
 from typing import List, Dict, Tuple
 
 
-class WritingBot:
+class Briefly:
     def __init__(self):
         self.rules = {
             "super_specific_how": {
@@ -594,7 +594,7 @@ def main():
     
     args = parser.parse_args()
     
-    bot = WritingBot()
+    bot = Briefly()
     
     # Get input text
     if args.file:

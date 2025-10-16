@@ -1,6 +1,6 @@
-// Writing Bot Frontend - Client-side analysis based on the Python bot logic
+// Briefly Frontend - Client-side analysis based on the Python bot logic
 
-class WritingBot {
+class Briefly {
     constructor() {
         this.rules = {
             "super_specific_how": {
@@ -412,7 +412,7 @@ class WritingBot {
 }
 
 // Global variables and event handlers
-const bot = new WritingBot();
+const bot = new Briefly();
 
 // AI Enhancement functionality
 class AIEnhancer {

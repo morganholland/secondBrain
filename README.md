@@ -1,10 +1,10 @@
-# Enhanced Writing Bot - Based on Classic Writing Guides
+# Briefly - Enhanced Writing Analysis Tool
 
-A Python-based writing bot that analyzes and improves text based on proven writing principles from multiple authoritative sources.
+A Python-based writing analysis tool that analyzes and improves text based on proven writing principles from multiple authoritative sources.
 
 ## Key Writing Rules Applied
 
-The bot analyzes text against writing principles from:
+The tool analyzes text against writing principles from:
 
 ### Wes Kao's Principles (from Lenny's Podcast):
 1. **Super Specific "How"** - Focus on actionable implementation details rather than just "what" and "why"
@@ -47,7 +47,7 @@ python writing_bot.py --file input.txt --output results.txt
 
 ## How It Works
 
-The bot analyzes your text against each writing principle and provides:
+The tool analyzes your text against each writing principle and provides:
 
 - **Pass/Fail Status** for each principle
 - **Specific Issues** found in your text
