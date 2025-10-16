@@ -422,31 +422,39 @@ class AIEnhancer {
     }
 
     async enhanceText(text, apiKey) {
+        // Validate input length (Mixtral context is 32k tokens, ~128k chars)
+        if (text.length > 10000) {
+            throw new Error('Text too long. Please limit to 10,000 characters.');
+        }
+        
         const prompt = this.createWritingPrompt(text);
         
         try {
+            const requestBody = {
+                model: this.model,
+                messages: [
+                    {
+                        role: 'system',
+                        content: 'You are an expert writing coach who applies proven principles from Wes Kao, June Casagrande, the Minto Pyramid Principle, HBR Guide to Better Business Writing, and William Zinsser to improve business and creative writing.'
+                    },
+                    {
+                        role: 'user',
+                        content: prompt
+                    }
+                ],
+                temperature: 0.7,
+                max_tokens: 2000
+            };
+            
+            console.log('Sending request to Groq API...', { model: this.model });
+            
             const response = await fetch(this.groqApiUrl, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model: this.model,
-                    messages: [
-                        {
-                            role: 'system',
-                            content: 'You are an expert writing coach who applies proven principles from Wes Kao, June Casagrande, the Minto Pyramid Principle, HBR Guide to Better Business Writing, and William Zinsser to improve business and creative writing.'
-                        },
-                        {
-                            role: 'user',
-                            content: prompt
-                        }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 2000,
-                    stream: false
-                })
+                body: JSON.stringify(requestBody)
             });
 
             if (!response.ok) {
@@ -470,32 +478,12 @@ class AIEnhancer {
     }
 
     createWritingPrompt(originalText) {
-        return `Please rewrite the following text applying these proven writing principles:
+        return `Rewrite this text applying professional writing principles: be specific, cut unnecessary backstory, use active voice, lead with conclusions (bottom-line-up-front), keep sentences clear and concise, eliminate clutter and jargon.
 
-PRINCIPLES TO APPLY:
-1. Super Specific "How" - Focus on actionable implementation rather than vague concepts
-2. Cut Backstory - Start right before you get eaten by the bear, eliminate unnecessary setup
-3. Clear Recommendations - Avoid communication surprises, state your position clearly
-4. Bottom Line Up Front - Lead with conclusions, then provide context (Minto Pyramid)
-5. Sentence Structure - Use clear, concise sentences with proper structure
-6. Active Voice - Prefer active voice over passive for clarity and directness
-7. Logical Flow - Structure arguments logically with clear hierarchy
-8. Conciseness - Eliminate unnecessary words and redundant phrases
-9. Clarity & Simplicity - Write clearly, avoid jargon and complex constructions
-10. Eliminate Clutter - Remove unnecessary qualifiers, weak words, and complexity
-
-ORIGINAL TEXT:
+Original text:
 ${originalText}
 
-INSTRUCTIONS:
-- Rewrite the text to follow all these principles
-- Keep the core message and meaning intact
-- Make it more engaging and actionable
-- Ensure it flows logically and reads smoothly
-- Remove any backstory or setup that doesn't add value
-- Start with the main point or conclusion
-
-REWRITTEN TEXT:`;
+Improved version:`;
     }
 }
 
