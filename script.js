@@ -418,7 +418,7 @@ const bot = new WritingBot();
 class AIEnhancer {
     constructor() {
         this.groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
-        this.model = 'mixtral-8x7b-32768';
+        this.model = 'llama3-8b-8192';
     }
 
     async enhanceText(text, apiKey) {
