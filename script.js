@@ -444,19 +444,28 @@ class AIEnhancer {
                         }
                     ],
                     temperature: 0.7,
-                    max_tokens: 2000
+                    max_tokens: 2000,
+                    stream: false
                 })
             });
 
             if (!response.ok) {
-                throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.error?.message || errorData.message || response.statusText;
+                console.error('API Error Details:', errorData);
+                throw new Error(`API Error (${response.status}): ${errorMessage}`);
             }
 
             const data = await response.json();
+            
+            if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                throw new Error('Invalid response format from API');
+            }
+            
             return data.choices[0].message.content.trim();
         } catch (error) {
             console.error('AI Enhancement Error:', error);
-            throw new Error(`AI Enhancement failed: ${error.message}`);
+            throw error;
         }
     }
 
